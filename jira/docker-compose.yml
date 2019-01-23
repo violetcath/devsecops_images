@@ -1,0 +1,53 @@
+version: '3'
+services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    restart: always
+    networks:
+      - tools_network
+    ports:
+      - 80:80
+    volumes:
+      - nginx_conf:/etc/nginx/
+      - nginx_html:/usr/share/nginx/html/
+   
+  jira:
+    image: cptactionhank/atlassian-jira:latest
+    restart: always
+    links:
+      - database
+    ports:
+      - 8080:8080
+    volumes:
+      - jira-data:/var/atlassian/jira
+    environment:
+      - CATALINA_OPTS=-Xms768m -Xmx1024m
+      - JIRA_CONTEXT_PATH=/jira
+      - X_PROXY_NAME=ipaddress
+      - X_PROXY_PORT=8080
+      - X_PROXY_SCHEME=http
+
+  confluence:
+    image: cptactionhank/atlassian-confluence:latest
+    restart: always
+    links:
+      - database
+    volumes:
+      - confluence-data:/var/atlassian/confluence
+      
+  database:
+    image: postgres:9.6
+    restart: always
+    volumes:
+      - database-data:/var/lib/postgresql/data
+
+volumes:
+  nginx_conf:
+  nginx_html:
+  jira-data:
+  confluence-data:
+  database-data:
+
+networks:
+  tools_network:

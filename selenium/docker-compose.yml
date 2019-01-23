@@ -1,0 +1,43 @@
+version: '3'
+services:
+  selenium-node-firefox:
+    image: selenium/node-firefox:latest
+    links:
+      - selenium-hub:hub
+    environment:
+      HUB_PORT_4444_TCP_ADDR: 'hub'
+      HUB_PORT_4444_TCP_PORT: 4444
+    depends_on:
+      - selenium-hub
+  selenium-node-chrome:
+    image: selenium/node-chrome:latest
+    links:
+      - selenium-hub:hub
+    environment:
+      HUB_PORT_4444_TCP_ADDR: 'hub'
+      HUB_PORT_4444_TCP_PORT: 4444
+    depends_on:
+      - selenium-hub
+  selenium-hub:
+    image: selenium/hub:latest
+    ports:
+      - '4444:4444'
+  nginx:
+    restart: always
+    image: nginx
+    depends_on:
+      - selenium-node-chrome
+      - selenium-node-firefox
+      - selenium-hub
+    links:
+      - selenium-hub:hub
+    environment:
+      OFFLOAD_TO_HOST: 'hub'
+      OFFLOAD_TO_PORT: 4444
+      SERVICE_NAME: 'selenium-hub'
+      HEALTH_CHECK_PATH: '/status'
+      ENFORCE_HTTPS: 'false'
+    volumes:
+      - ./private:/etc/ssl/private
+    ports:
+      - '80:80'
