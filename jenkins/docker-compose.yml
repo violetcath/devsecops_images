@@ -19,7 +19,7 @@ services:
     networks:
       - tools_network
     ports:
-      - 8080:8080
+      - 9090:9090
     volumes:
       - jenkins_home:/var/jenkins_home
     environment:
