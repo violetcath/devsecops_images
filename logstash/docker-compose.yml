@@ -1,0 +1,37 @@
+version: '3'
+services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    restart: always
+    networks:
+      - tools_network
+    ports:
+      - 80:80
+    volumes:
+      - nginx_conf:/etc/nginx/
+      - nginx_html:/usr/share/nginx/html/
+  
+  logstash:
+    container_name: logstash
+    image: jenkins/jenkins
+    restart: always
+    networks:
+      - tools_network
+    ports:
+      - 5555:5555
+    volumes:
+      - logstash_home:/var/logstash_home
+    environment:
+      - LOGSTASH_URL=http://ipaddress:5555
+
+
+
+
+volumes:
+  nginx_conf:
+  nginx_html:
+  jenkins_home:
+
+networks:
+  tools_network:
