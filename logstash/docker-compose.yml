@@ -30,7 +30,7 @@ services:
 volumes:
   nginx_conf:
   nginx_html:
-  jenkins_home:
+  logstash_home:
 
 networks:
   tools_network:
