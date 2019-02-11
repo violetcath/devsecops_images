@@ -1,5 +1,18 @@
 version: '3'
 services:
+  jenkins:
+    container_name: jenkins
+    image: jenkins/jenkins:lts
+    restart: always
+    networks:
+      - tools_network
+    ports:
+      - 8080:8080
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    environment:
+      - JENKINS_OPTS="--prefix=/jenkins"
+
   nginx:
     container_name: nginx
     image: nginx
@@ -11,22 +24,6 @@ services:
     volumes:
       - nginx_conf:/etc/nginx/
       - nginx_html:/usr/share/nginx/html/
-
-  jenkins:
-    container_name: jenkins
-    image: jenkins/jenkins
-    restart: always
-    networks:
-      - tools_network
-    ports:
-      - 9090:9090
-    volumes:
-      - jenkins_home:/var/jenkins_home
-    environment:
-      - JENKINS_OPTS="--prefix=/jenkins"
-
-
-
 
 volumes:
   nginx_conf:
