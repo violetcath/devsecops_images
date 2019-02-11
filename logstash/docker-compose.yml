@@ -13,7 +13,7 @@ services:
       - nginx_conf:/etc/nginx/
       - nginx_html:/usr/share/nginx/html/
   logstash:
-    image: logstash
+    image: logstash:6.6.0
     ports:
       - "5555:5555"
     networks:
@@ -22,10 +22,6 @@ services:
       - LOGSTASH_URL=http://ipaddress:5555  
     volumes:
       - logstash_home:/var/logstash_home
-    
-
-
-
 
 volumes:
   nginx_conf:
